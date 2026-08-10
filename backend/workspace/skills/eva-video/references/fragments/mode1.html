@@ -1,0 +1,183 @@
+<!-- ═══════════════════════════════════════════════════
+     视频 · 模式一：标准视频
+     fragment — 不含 <html>/<head>/<body>，可直接拼入宿主页
+     ═══════════════════════════════════════════════════ -->
+
+<!-- ── 1. 组件样式 ── -->
+<style>
+[data-eva="eva-video"][data-mode="mode1"] {
+  position: relative;
+}
+
+[data-eva="eva-video"][data-mode="mode1"] .eva-video__media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+[data-eva="eva-video"][data-mode="mode1"] .eva-video__media--video {
+  position: relative;
+  z-index: 1;
+}
+
+[data-eva="eva-video"][data-mode="mode1"] .eva-video__fallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+[data-eva="eva-video"][data-mode="mode1"] .eva-video__fallback--only {
+  position: relative;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-eva="eva-video"][data-mode="mode1"] * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+
+<!-- ── 2. 组件 DOM ── -->
+<!--
+  data-fill 标注：
+    color → AI 只替换 --eva-video-placeholder-bg 占位背景色
+    none  → 视频/兜底图均由运营数据驱动，AI 不修改
+
+  视频和兜底图属于运营数据，默认 data-fill="none"，
+    eva-visual-fill 不修改对应 dataFields
+-->
+<div
+  data-eva="eva-video"
+  data-mode="mode1"
+  data-instance="{{INSTANCE_ID}}"
+  class="eva-video__root"
+  data-ui-baseline="source-default"
+  data-eva-visual="style-only"
+  data-eva-slot="media"
+  data-fill="none"
+  role="region"
+  aria-label="视频"
+>
+  <!-- 视频和兜底图由 JS 动态插入 -->
+</div>
+
+<!-- ── 3. 组件逻辑 ── -->
+<script>
+(function () {
+  'use strict';
+
+  // ── 组件状态（按实例隔离）──
+  window.BiliEvaVideoStore = window.BiliEvaVideoStore || {};
+
+  function init(root) {
+    // 幂等保护：同一模式的多个 fragment 脚本不得重复初始化实例
+    if (root.dataset.evaInitialized) return;
+    root.dataset.evaInitialized = root.dataset.mode;
+
+    const instanceId = root.dataset.instance || '0';
+    const componentName = root.dataset.eva;
+    const fields = (window.__EVA_DATA_FIELDS__ &&
+      window.__EVA_DATA_FIELDS__[componentName + '_' + instanceId]) || {};
+
+    const videoSrc   = fields.videoSrc   || '';
+    const imgSrc     = fields.imgSrc     || '';
+    const posterSrc  = fields.posterSrc  || '';
+    const objectFit  = 'cover';
+
+    window.BiliEvaVideoStore[instanceId] = window.BiliEvaVideoStore[instanceId] || {
+      isDegraded: false,
+    };
+
+    // ── 兜底图（初始绝对定位，占位用）──
+    let fallbackImg = null;
+    if (imgSrc) {
+      fallbackImg = document.createElement('img');
+      fallbackImg.src = imgSrc;
+      fallbackImg.alt = '';
+      fallbackImg.dataset.evaBind = 'imgSrc';
+      fallbackImg.dataset.evaVisual = 'locked';
+      fallbackImg.dataset.fill = 'none';
+      fallbackImg.className = 'eva-video__fallback';
+      fallbackImg.style.objectFit = objectFit;
+      root.appendChild(fallbackImg);
+    }
+
+    function showFallbackOnly() {
+      if (!fallbackImg) return;
+      if (!fallbackImg.parentNode) root.appendChild(fallbackImg);
+      fallbackImg.classList.remove('eva-video__fallback');
+      fallbackImg.classList.add('eva-video__fallback--only');
+      fallbackImg.style.position = 'relative';
+      fallbackImg.style.width = '100%';
+      fallbackImg.style.height = 'auto';
+    }
+
+    // ── 视频 ──
+    const prefersReducedMotion = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!videoSrc || prefersReducedMotion) {
+      showFallbackOnly();
+      return;
+    }
+
+    const video = document.createElement('video');
+    video.dataset.evaBind = 'videoSrc';
+    video.dataset.evaVisual = 'locked';
+    video.dataset.fill = 'none';
+    video.src        = videoSrc;
+    video.muted      = true;
+    video.autoplay   = true;
+    video.loop       = true;
+    video.playsInline = true;
+    video.preload    = 'auto';
+    video.className  = 'eva-video__media eva-video__media--video';
+    video.style.objectFit = objectFit;
+    video.style.width  = '100%';
+    video.style.height = '100%';
+    if (posterSrc) video.poster = posterSrc;
+
+    root.appendChild(video);
+
+    function degrade() {
+      const state = window.BiliEvaVideoStore[instanceId];
+      if (state.isDegraded) return;
+      state.isDegraded = true;
+      // 移除视频元素
+      if (video.parentNode) video.parentNode.removeChild(video);
+      // 兜底图改为 relative 撑开容器
+      showFallbackOnly();
+    }
+
+    // 源组件在 loadeddata 后移除加载占位图；降级时会重新挂回。
+    video.addEventListener('loadeddata', function () {
+      if (fallbackImg && fallbackImg.parentNode) {
+        fallbackImg.parentNode.removeChild(fallbackImg);
+      }
+    }, { once: true });
+
+    // video.play() 是异步的，必须通过 Promise 判断是否真正播放成功
+    // 同步检查 video.paused 在微信等限制自动播放的环境中不可靠
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function () {
+        degrade();
+      });
+    }
+
+    video.addEventListener('error', function () {
+      degrade();
+    });
+  }
+
+  document.querySelectorAll('[data-eva="eva-video"][data-mode="mode1"]').forEach(init);
+
+})();
+</script>

@@ -1,0 +1,15 @@
+{
+  "node_version": "22",
+  "graphs": {
+    "agent": "./src/agent.ts:agent"
+  },
+  "env": ".env",
+  "http": {
+    "app": "./src/http.ts:app",
+    "cors": {
+      "allow_origins": ["http://localhost:5173"],
+      "allow_methods": ["GET", "POST", "OPTIONS", "DELETE"],
+      "allow_headers": ["*"]
+    }
+  }
+}

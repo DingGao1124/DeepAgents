@@ -1,0 +1,474 @@
+<!-- ═══════════════════════════════════════════════════
+     H5关注 · 模式一：单UP主关注
+     fragment — 不含 <html>/<head>/<body>，可直接拼入宿主页
+     ═══════════════════════════════════════════════════ -->
+
+<!-- ── 1. 组件样式 ── -->
+<style>
+[data-eva="h5-follow-new"][data-mode="mode1"] {
+  --h5-follow-new-primary: #b0b0b0;
+  --h5-follow-new-followed-bg: #d4d4d4;
+  --h5-follow-new-followed-color: #888888;
+  --h5-follow-new-name-color: #333333;
+  --h5-follow-new-border-color: #cccccc;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-face-link {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-face {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 0 0.04rem var(--h5-follow-new-border-color);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-face img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-name {
+  box-sizing: content-box;
+  padding: 0.08rem 0 0.16rem;
+  width: 2.4rem;
+  font-size: 0.24rem;
+  line-height: 0.4rem;
+  height: 0.4rem;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--h5-follow-new-name-color);
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-btn-wrap {
+  position: relative;
+  width: 1.6rem;
+  height: 0.48rem;
+  margin: 0 auto;
+  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-btn-wrap[aria-busy="true"] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-btn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: opacity 0.2s ease-in-out;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-btn-default {
+  opacity: 1;
+  background-color: var(--h5-follow-new-primary);
+  color: #fff;
+  border-radius: 0.08rem;
+  text-align: center;
+  font-size: 0.26rem;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-btn-followed {
+  opacity: 0;
+  background-color: var(--h5-follow-new-followed-bg);
+  color: var(--h5-follow-new-followed-color);
+  border-radius: 0.08rem;
+  text-align: center;
+  font-size: 0.26rem;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"].is-followed .h5fn-btn-default {
+  opacity: 0;
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"].is-followed .h5fn-btn-followed {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-eva="h5-follow-new"][data-mode="mode1"] * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+[data-eva="h5-follow-new"][data-mode="mode1"] .h5fn-btn-wrap:focus-visible {
+  outline: 2px solid var(--h5-follow-new-primary);
+  outline-offset: 2px;
+  border-radius: 0.08rem;
+}
+</style>
+
+<!-- ── 2. 组件 DOM ── -->
+<!--
+  data-fill 标注：
+    image → AI 可生成图片填充
+    color → AI 只改颜色
+    none  → AI 不改（用户头像、昵称等真实数据）
+  data-editable="true" → 运营可修改的静态文字
+-->
+<div data-eva="h5-follow-new" data-mode="mode1" data-instance="{{INSTANCE_ID}}"
+  data-ui-baseline="source-default" data-eva-visual="style-only" role="region" aria-label="关注UP主">
+  <div class="h5fn-wrap" data-eva-slot="content" data-eva-visual="layout">
+    <!-- 头像（点击跳转UP主空间） -->
+    <a class="h5fn-face-link" data-eva-action="open-profile" href="#" target="_blank" rel="noopener noreferrer" aria-label="前往UP主空间">
+      <div class="h5fn-face" data-eva-visual="style-only" data-fill="none" role="img" aria-label="UP主头像">
+        <img src="" data-eva-bind="face" data-eva-visual="style-only" data-fill="none" alt="UP主头像" loading="lazy" />
+      </div>
+    </a>
+    <!-- 昵称 -->
+    <a class="h5fn-name" data-eva-action="open-profile" data-eva-bind="uname" data-eva-visual="style-only" href="#" target="_blank" rel="noopener noreferrer" data-fill="none">UP主昵称</a>
+    <!-- 关注/已关注按钮 -->
+    <button type="button" class="h5fn-btn-wrap" data-eva-action="toggle-follow" data-eva-visual="style-only"
+      aria-label="关注" aria-pressed="false">
+      <span class="h5fn-btn h5fn-btn-default" data-eva-state="default" data-eva-visual="style-only" data-fill="image">关注</span>
+      <span class="h5fn-btn h5fn-btn-followed" data-eva-state="followed" data-eva-visual="style-only" data-fill="image">已关注</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── 3. 组件逻辑 ── -->
+<script>
+(function () {
+  'use strict';
+
+  // ── 关注组件工具（独立命名空间，按能力幂等补齐）──
+  window.BiliH5FollowUtils = window.BiliH5FollowUtils || {};
+  const followUtils = window.BiliH5FollowUtils;
+  if (!followUtils.getApiHost) {
+    followUtils.getApiHost = function () {
+        const url = location.href, h = location.hostname;
+        if (h.includes('uat-') || url.includes('_apiEnv_=uat')) return 'uat-api.bilibili.com';
+        if (h.includes('pre-') || url.includes('_apiEnv_=pre')) return 'pre-api.bilibili.com';
+        return 'api.bilibili.com';
+      };
+  }
+  if (!followUtils.getCsrf) {
+    followUtils.getCsrf = function () {
+        const m = document.cookie.match(/(?:^|;\s*)bili_jct=([^;]+)/);
+        return m ? m[1] : '';
+      };
+  }
+  if (!followUtils.handleUnauthorized) {
+    followUtils.handleUnauthorized = function () {
+        const gourl = encodeURIComponent(location.href);
+        window.biliBridge
+          ? window.biliBridge.useNative('auth.login', { callbackUrl: location.href })
+          : (location.href = `https://passport.bilibili.com/login?gourl=${gourl}`);
+      };
+  }
+  if (!followUtils.delay) {
+    followUtils.delay = function (ms, signal) {
+        return new Promise((resolve, reject) => {
+          const t = setTimeout(resolve, ms);
+          signal?.addEventListener('abort', () => { clearTimeout(t); reject(new DOMException('Aborted', 'AbortError')); });
+        });
+      };
+  }
+
+  // ── 事件总线（幂等，用于多关注组件同步已关注列表）──
+  if (!window.BiliActEvents) {
+    window.BiliActEvents = {
+      _listeners: {},
+      on(event, fn) { (this._listeners[event] = this._listeners[event] || []).push(fn); },
+      emit(event, data) { (this._listeners[event] || []).forEach(fn => fn(data)); },
+      off(event, fn) {
+        if (!this._listeners[event]) return;
+        this._listeners[event] = this._listeners[event].filter(f => f !== fn);
+      },
+    };
+  }
+
+  // ── 全局 Store（幂等）──
+  if (!window.BiliFollowNewStore) {
+    window.BiliFollowNewStore = {
+      followInfoPromise: null,
+      userInfoPromise: null,
+    };
+  }
+
+  // ── 适配器 ──
+  const API_MODE = window.__EVA_API_MODE__ || 'preview';
+
+  const MOCK_DATA = {
+    '/x/web-interface/nav': { code: 0, data: { mid: 0, isLogin: false } },
+    '/x/relation/followings/simple': { code: 0, data: { list: [] } },
+    '/x/relation/modify': { code: 0, message: '0' },
+  };
+
+  async function realFetch(url, options) {
+    const res = await fetch(url, { credentials: 'include', ...options });
+    return res.json();
+  }
+
+  async function mockFetch(url, options) {
+    await followUtils.delay(400, options?.signal);
+    const path = new URL(url).pathname;
+    const forcedFailure = window.__EVA_MOCK_FAILURES__?.[path];
+    if (forcedFailure) return forcedFailure;
+    return MOCK_DATA[path] ?? { code: 0, data: {} };
+  }
+
+  const fetcher = API_MODE === 'production' ? realFetch : mockFetch;
+
+  const adapter = {
+    async getUserInfo({ signal } = {}) {
+      const url = `https://${followUtils.getApiHost()}/x/web-interface/nav`;
+      const json = await fetcher(url, { signal });
+      if (json.code !== 0) return null;
+      return json.data;
+    },
+    async getFollowList({ signal } = {}) {
+      const url = `https://${followUtils.getApiHost()}/x/relation/followings/simple`;
+      const json = await fetcher(url, { signal });
+      if (json.code !== 0) return [];
+      // data.list 可能是纯数字数组或对象数组 [{mid, uname, ...}]，统一转 Number
+      return (json.data?.list || []).map(item => Number(typeof item === 'object' ? item?.mid : item)).filter(n => !isNaN(n));
+    },
+    async modifyAttention({ uid, act = 1, signal } = {}) {
+      const spmid = window.__BILIACT_PAGEINFO__?.spmid ? `${window.__BILIACT_PAGEINFO__.spmid}.0.0` : '';
+      const activityID = window.__BILIACT_PAGEINFO__?.page_id || '';
+      const body = new URLSearchParams({
+        fid: String(uid),
+        act: String(act),
+        re_src: '222',
+        csrf: followUtils.getCsrf(),
+        spmid,
+        edit_content: JSON.stringify({ entity: 'activity', entity_id: activityID }),
+      });
+      return fetcher(`https://${followUtils.getApiHost()}/x/relation/modify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
+        signal,
+      });
+    },
+  };
+
+  // ── 共享：拉取已关注列表（多实例共用一次请求）──
+  function tryFetchFollowInfo() {
+    const store = window.BiliFollowNewStore;
+    if (store.followInfoPromise) return store.followInfoPromise;
+    store.followInfoPromise = adapter.getFollowList()
+      .then(list => {
+        window.BiliActEvents.emit('FOLLOW_INFO_READY', list);
+        return list;
+      })
+      .catch(() => [])
+      .finally(() => { store.followInfoPromise = null; });
+    return store.followInfoPromise;
+  }
+
+  // ── 实例 Store ──
+  window.BiliH5FollowNewStore = window.BiliH5FollowNewStore || {};
+
+  function init(root) {
+    // 幂等保护：多段脚本同页面执行时，已初始化的实例不重复处理
+    if (root.dataset.evaInitialized) return;
+    root.dataset.evaInitialized = 'mode1';
+
+    const instanceId = root.dataset.instance || '0';
+    const fields = (window.__EVA_DATA_FIELDS__ && window.__EVA_DATA_FIELDS__[`h5-follow-new_${instanceId}`]) || {};
+    const uid = Number(fields.uid || 0);
+
+    if (!uid) return; // uid 无效，不渲染
+
+    window.BiliH5FollowNewStore[instanceId] = window.BiliH5FollowNewStore[instanceId] || {
+      uid,
+      isFetching: false,
+      followedList: [],
+      currentUserMid: 0,
+      abortController: null,
+    };
+
+    const state = window.BiliH5FollowNewStore[instanceId];
+
+    // 填充头像、昵称、跳转链接
+    const uname = fields.uname || '';
+    const face = fields.face || '';
+    const profileUrl = `https://space.bilibili.com/${uid}`;
+
+    const faceLinks = root.querySelectorAll('[data-eva-action="open-profile"]');
+    faceLinks.forEach(el => { el.href = profileUrl; });
+
+    const faceImg = root.querySelector('[data-eva-bind="face"]');
+    if (faceImg && face) {
+      faceImg.src = face.replace(/^http:/, 'https:');
+      faceImg.alt = uname ? `${uname}的头像` : 'UP主头像';
+    }
+
+    const nameEl = root.querySelector('[data-eva-bind="uname"]');
+    if (nameEl) {
+      nameEl.href = profileUrl;
+      nameEl.textContent = uname;
+      nameEl.setAttribute('aria-label', `前往${uname || 'UP主'}的空间`);
+    }
+
+    // 监听已关注列表更新
+    const onFollowReady = function (list) {
+      state.followedList = Array.isArray(list) ? list.map(Number) : [];
+      renderFollowState(root, state);
+    };
+    window.BiliActEvents.on('FOLLOW_INFO_READY', onFollowReady);
+
+    // 获取当前用户 mid
+    const store = window.BiliFollowNewStore;
+    if (!store.userInfoPromise) {
+      store.userInfoPromise = adapter.getUserInfo()
+        .then(data => { state.currentUserMid = data?.mid || 0; return data; })
+        .catch(() => { state.currentUserMid = 0; return null; })
+        .finally(() => { store.userInfoPromise = null; });
+    } else {
+      store.userInfoPromise.then(data => { state.currentUserMid = data?.mid || 0; });
+    }
+
+    // 拉取已关注列表（兜底：事件可能已触发）
+    tryFetchFollowInfo().then(list => {
+      if (Array.isArray(list) && list.length) {
+        state.followedList = list.map(Number);
+        renderFollowState(root, state);
+      }
+    });
+
+    // 绑定按钮事件
+    const btnWrap = root.querySelector('[data-eva-action="toggle-follow"]');
+    if (btnWrap) {
+      const onClick = function () {
+        if (state.isFetching) return;
+        const isFollowed = state.followedList.includes(uid);
+        // 已关注且不支持取关：无操作
+        if (isFollowed && fields.unfollow === false) return;
+        doToggleFollow(root, state, uid, isFollowed, btnWrap);
+      };
+      btnWrap.addEventListener('click', onClick);
+    }
+
+    renderFollowState(root, state);
+  }
+
+  function renderFollowState(root, state) {
+    const isFollowed = state.followedList.includes(state.uid);
+    root.classList.toggle('is-followed', isFollowed);
+    const btnWrap = root.querySelector('[data-eva-action="toggle-follow"]');
+    if (btnWrap) {
+      btnWrap.setAttribute('aria-pressed', String(isFollowed));
+      btnWrap.setAttribute('aria-label', isFollowed ? '已关注' : '关注');
+    }
+  }
+
+  async function doToggleFollow(root, state, uid, isFollowed, btn) {
+    state.isFetching = true;
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
+    btn.setAttribute('aria-disabled', 'true');
+
+    const ac = new AbortController();
+    state.abortController = ac;
+
+    try {
+      const res = await adapter.modifyAttention({ uid, act: isFollowed ? 2 : 1, signal: ac.signal });
+      switch (res.code) {
+        case 0:
+          if (!isFollowed) {
+            // 关注成功：乐观更新
+            state.followedList = [...state.followedList, uid];
+            logEvent('activity_follow_success_' + uid);
+            logEvent('reissue-popup.click', { pop_type: 'normal', button: 1, upid: uid });
+            window.BiliActEvents.emit('SUMMER_FITNESS_FOLLOW_SEND_POINTS', true);
+          } else {
+            // 取关成功：从列表移除（不直接赋值 computed，而是更新数据）
+            state.followedList = state.followedList.filter(id => id !== uid);
+            logEvent('activity_unfollow_success_' + uid);
+          }
+          // production 模式下刷新最新关注列表，preview 模式保留乐观更新结果
+          if (API_MODE === 'production') {
+            tryFetchFollowInfo().then(list => {
+              if (Array.isArray(list)) {
+                state.followedList = list.map(Number);
+                renderFollowState(root, state);
+              }
+            });
+          }
+          renderFollowState(root, state);
+          break;
+        case -101:
+          followUtils.handleUnauthorized();
+          break;
+        case -102:
+          showToast('被封禁用户不能关注哦！');
+          break;
+        case -400:
+          showToast('你时刻都在关注自己哦～');
+          break;
+        default:
+          showToast(res.message || '操作失败，请重试');
+      }
+    } catch (e) {
+      if (e.name !== 'AbortError') showToast('网络错误，请重试');
+    } finally {
+      state.isFetching = false;
+      btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      btn.removeAttribute('aria-disabled');
+    }
+  }
+
+  function logEvent(name, params) {
+    try {
+      if (window.logger) window.logger('click', name, params);
+    } catch (e) { /* 埋点不阻断业务 */ }
+  }
+
+  function showToast(msg) {
+    // 简单 toast 实现，可替换为项目级 toast 组件
+    const el = document.createElement('div');
+    el.textContent = msg;
+    Object.assign(el.style, {
+      position: 'fixed', bottom: '15%', left: '50%', transform: 'translateX(-50%)',
+      background: 'rgba(0,0,0,0.7)', color: '#fff', padding: '0.16rem 0.32rem',
+      borderRadius: '0.08rem', fontSize: '0.28rem', zIndex: '9999',
+      whiteSpace: 'nowrap', pointerEvents: 'none',
+    });
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+
+  // 初始化当前已存在的实例
+  document.querySelectorAll('[data-eva="h5-follow-new"][data-mode="mode1"]').forEach(init);
+
+})();
+</script>

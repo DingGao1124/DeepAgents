@@ -1,0 +1,82 @@
+<style>
+[data-eva="eva-image"][data-mode="mode1"] {
+  --eva-image-width: 8.48rem;
+  --eva-image-height: 4.72rem;
+  position: relative;
+  display: block;
+  width: var(--eva-image-width);
+  height: var(--eva-image-height);
+}
+[data-eva="eva-image"][data-mode="mode1"][data-view="sm"] {
+  --eva-image-width: 4.24rem;
+  --eva-image-height: 2.36rem;
+}
+[data-eva="eva-image"][data-mode="mode1"] [data-eva-bind="src"] {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-eva="eva-image"][data-mode="mode1"] * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div data-eva="eva-image" data-mode="mode1" data-instance="{{INSTANCE_ID}}"
+  data-ui-baseline="source-default" data-eva-visual="style-only"
+  data-eva-slot="image" data-fill="image" data-fill-gen="true"></div>
+
+<script>
+(function () {
+  'use strict';
+  const DEFAULT_SRC = 'https://i0.hdslb.com/bfs/activity-plat/static/20230324/ec9c95c5da262958eec2a88b54ad8bf6/6S0Shhx3LN.png';
+
+  function formatSrc(src, width, height, multiple, quality) {
+    if (!src) return '';
+    const isProtocolRelative = src.startsWith('//');
+    if (!isProtocolRelative && !/^https?:\/\//i.test(src)) return src;
+
+    let parsed;
+    try { parsed = new URL(isProtocolRelative ? 'https:' + src : src); } catch (_) { return src; }
+
+    // 与 formattedSrcV2 的资源范围保持一致：只处理 BFS 位图。
+    // SVG、非 BFS 地址和未知扩展名必须保留原地址，不能追加 WebP 参数。
+    if (!/^(?:uat-|pre-)?[is]\d+\.hdslb\.com$/i.test(parsed.hostname)) return src;
+    if (!parsed.pathname.startsWith('/bfs/')) return src;
+
+    const cleanPath = parsed.pathname.replace(/@[^/?#]+$/, '');
+    if (!/\.(?:jpe?g|png|webp|gif|avif)$/i.test(cleanPath)) return src;
+    if (parsed.searchParams.get('closeBmg') === '1') return src;
+
+    parsed.pathname = cleanPath + '@' + Math.round(width * multiple) + 'w_' +
+      Math.round(height * multiple) + 'h_' + quality + 'q.webp';
+    const formatted = parsed.toString();
+    return isProtocolRelative ? formatted.replace(/^https:/, '') : formatted;
+  }
+
+  function init(root) {
+    if (root.dataset.evaInitialized) return;
+    root.dataset.evaInitialized = root.dataset.mode;
+    const instanceId = root.dataset.instance || '0';
+    const key = 'eva-image_' + instanceId;
+    const allFields = window.__EVA_DATA_FIELDS__ || {};
+    const hasRuntimeData = Object.prototype.hasOwnProperty.call(allFields, key);
+    const fields = hasRuntimeData ? allFields[key] || {} : {};
+    const isMobile = document.documentElement.classList.contains('env-mobile');
+    const width = isMobile ? 212 : 424;
+    const height = isMobile ? 118 : 236;
+    root.dataset.view = isMobile ? 'sm' : 'default';
+    if (fields.clickPointer === true) root.style.pointerEvents = 'none';
+    const src = hasRuntimeData ? String(fields.src || '') : DEFAULT_SRC;
+    if (!src) return;
+    const img = document.createElement('img');
+    img.dataset.evaBind = 'src';
+    img.dataset.evaVisual = 'style-only';
+    img.dataset.fill = 'image';
+    img.dataset.fillGen = 'true';
+    img.alt = String(fields.alt || '');
+    img.src = formatSrc(src, width, height, 2, 90);
+    root.appendChild(img);
+  }
+  document.querySelectorAll('[data-eva="eva-image"][data-mode="mode1"]').forEach(init);
+})();
+</script>

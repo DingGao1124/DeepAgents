@@ -1,0 +1,19 @@
+{
+  "name": "deepagent-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --recursive --parallel dev",
+    "dev:backend": "pnpm --filter deepagent-backend dev",
+    "dev:frontend": "pnpm --filter deepagent-frontend dev",
+    "build": "pnpm --filter deepagent-frontend build",
+    "typecheck": "pnpm --recursive typecheck",
+    "setup": "pnpm install && (cd backend && cp -n .env.example .env 2>/dev/null || true)"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  }
+}

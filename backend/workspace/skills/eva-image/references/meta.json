@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 2,
+  "name": "EvaImage",
+  "label": "图片",
+  "description": "在活动页中展示一张业务图片，适用于 Banner、KV 图和装饰图",
+  "platform": "H5/PC",
+  "version": "1.0.39",
+  "componentDir": "eva-image",
+  "modes": [
+    {
+      "id": "mode1",
+      "label": "静态图片",
+      "fragment": "fragments/mode1.html",
+      "previewImage": "https://i0.hdslb.com/bfs/activity-plat/static/10613/11875/11876/20260805/d41d8cd98f00b204e9800998ecf8427e/YfErJhJndk.svg",
+      "fragmentUrl": "https://activity.hdslb.com/blackboard/static/d41d8cd98f00b204e9800998ecf8427e/eva-image-mode1.html",
+      "wireframe": {
+        "label": "图片组件",
+        "variant": "image",
+        "state": "default",
+        "aspectRatio": "424/236",
+        "format": "svg"
+      }
+    }
+  ],
+  "dataFields": [
+    {
+      "key": "src",
+      "label": "图片地址",
+      "type": "string",
+      "required": true,
+      "kind": "business-asset",
+      "sourceProp": "image.src",
+      "description": "需要展示的真实业务图片 URL"
+    },
+    {
+      "key": "alt",
+      "label": "图片描述",
+      "type": "string",
+      "required": false,
+      "kind": "business-data",
+      "sourceProp": "image.alt",
+      "description": "信息图片填写有意义的替代文本；纯装饰图可留空"
+    },
+    {
+      "key": "clickPointer",
+      "label": "点击穿透",
+      "type": "boolean",
+      "required": false,
+      "kind": "business-data",
+      "sourceProp": "image.clickPointer",
+      "description": "开启后图片不接收点击，事件穿透到下层业务区域"
+    }
+  ],
+  "sourceDefaults": {
+    "mode1": {
+      "src": "https://i0.hdslb.com/bfs/activity-plat/static/10613/11875/11876/20260804/d41d8cd98f00b204e9800998ecf8427e/EvJ2Updh7d.svg",
+      "desktopSize": {
+        "width": 424,
+        "height": 236
+      },
+      "mobileSize": {
+        "width": 212,
+        "height": 118
+      },
+      "multiple": 2,
+      "quality": 90,
+      "clickPointer": false,
+      "objectFit": "未设置",
+      "notes": "默认资源和尺寸来自 EvaImage.tsx；容器及图片不额外增加裁剪、背景或装饰"
+    }
+  },
+  "previewData": {
+    "mode1": {
+      "src": "https://i0.hdslb.com/bfs/activity-plat/static/10613/11875/11876/20260805/d41d8cd98f00b204e9800998ecf8427e/c5SLNlwI1Q.svg",
+      "alt": "",
+      "clickPointer": false
+    }
+  }
+}

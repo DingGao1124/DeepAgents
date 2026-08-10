@@ -1,0 +1,13 @@
+{
+	"servers": {
+		"Langchain Documents": {
+			"url": "https://docs.langchain.com/mcp",
+			"type": "http"
+		},
+		"Langchain Api References": {
+			"url": "https://reference.langchain.com/mcp",
+			"type": "http"
+		},
+	},
+	"inputs": []
+}

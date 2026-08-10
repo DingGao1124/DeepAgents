@@ -1,0 +1,9 @@
+
+# LangGraph API
+.langgraph_api
+
+# Agent-generated runtime files; keep only directory placeholders.
+workspace/sandbox/threads/*
+workspace/previews/*
+!workspace/sandbox/threads/.gitkeep
+!workspace/previews/.gitkeep

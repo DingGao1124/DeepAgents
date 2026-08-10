@@ -1,0 +1,56 @@
+<!-- ═══════════════════════════════════════════════════
+     短文本 · 模式一：短文本
+     fragment — 不含 <html>/<head>/<body>，可直接拼入宿主页
+     ═══════════════════════════════════════════════════ -->
+
+<!-- ── 1. 组件样式 ── -->
+<style>
+[data-eva="eva-text"][data-mode="mode1"] {
+  --eva-text-font-size: 0.24rem;
+  --eva-text-color: rgb(0, 0, 0);
+  --eva-text-font-weight: 400;
+  --eva-text-line-height: 1.5;
+  --eva-text-width: auto;
+}
+
+[data-eva="eva-text"][data-mode="mode1"] .etext-root {
+  font-size: var(--eva-text-font-size);
+  color: var(--eva-text-color);
+  font-weight: var(--eva-text-font-weight);
+  line-height: var(--eva-text-line-height);
+  width: var(--eva-text-width);
+  overflow: hidden;
+  word-wrap: break-word;
+}
+</style>
+
+<!-- ── 2. 组件 DOM ── -->
+<div data-eva="eva-text" data-mode="mode1" data-instance="{{INSTANCE_ID}}"
+  data-ui-baseline="source-default" data-eva-visual="style-only">
+  <div class="etext-root" data-eva-bind="content">
+    <!-- 文案由 JS 注入 -->
+  </div>
+</div>
+
+<!-- ── 3. 组件逻辑 ── -->
+<script>
+(function () {
+  'use strict';
+
+  function init(root) {
+    if (root.dataset.evaInitialized) return;
+    root.dataset.evaInitialized = 'mode1';
+
+    const instanceId = root.dataset.instance || '0';
+    const fields = (window.__EVA_DATA_FIELDS__ && window.__EVA_DATA_FIELDS__[`eva-text_${instanceId}`]) || {};
+
+    const contentEl = root.querySelector('[data-eva-bind="content"]');
+    if (contentEl) {
+      // textContent 防 XSS
+      contentEl.textContent = fields.content || '';
+    }
+  }
+
+  document.querySelectorAll('[data-eva="eva-text"][data-mode="mode1"]').forEach(init);
+})();
+</script>

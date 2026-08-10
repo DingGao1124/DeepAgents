@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eva Image"
+  short_description: "Generate an Eva image fragment from required business assets with controlled visual permissions."
+  default_prompt: "Use $eva-image to generate a source-baseline image fragment from the provided business image and optional behavior."

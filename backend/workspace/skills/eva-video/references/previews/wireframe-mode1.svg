@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">视频组件</title>
+  <desc id="desc">Eva Video 视频组件线框预览</desc>
+  <rect x="1" y="1" width="798" height="448" fill="#e0e0e0" stroke="#bbbbbb" stroke-width="1.5"/>
+  <circle cx="400" cy="209" r="48" fill="none" stroke="#888888" stroke-width="2"/>
+  <path d="M385 182V236L427 209Z" fill="none" stroke="#888888" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="400" y="293" text-anchor="middle" font-size="16" font-weight="500" fill="#888888" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">Eva Video</text>
+</svg>

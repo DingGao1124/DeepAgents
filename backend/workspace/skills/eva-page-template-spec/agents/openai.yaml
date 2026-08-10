@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eva Page Template Spec"
+  short_description: "Assemble schema-v2 Eva fragments into a deployable single-file HTML page."
+  default_prompt: "Use $eva-page-template-spec to combine the selected Eva component fragments into a full activity page HTML."

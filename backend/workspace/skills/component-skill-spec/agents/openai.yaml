@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eva Component Skill Spec"
+  short_description: "Generate skill docs (meta.json, reference.md, fragments) for Eva activity platform components."
+  default_prompt: "Use $component-skill-spec to generate a complete skill document for the specified Eva component."

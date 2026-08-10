@@ -1,0 +1,23 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# builds
+build/
+dist/
+*.tsbuildinfo
+
+# env & secrets
+.env
+.env.local
+.env.*.local
+
+# logs
+logs/
+*.log
+npm-debug.log*
+
+# os / editor
+.DS_Store
+.idea/
+*.swp

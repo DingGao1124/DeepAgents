@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eva H5关注组件"
+  short_description: "Generate behavior-safe H5 follow fragments with controlled visual permissions."
+  default_prompt: "Use $h5-follow-new to generate a follow component fragment for the Eva activity page."

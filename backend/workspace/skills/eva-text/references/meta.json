@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "name": "EvaText",
+  "label": "短文本",
+  "description": "展示运营填写的文案，字号、颜色、字重、行高等视觉配置在填充阶段处理",
+  "platform": "H5",
+  "version": "1.0.27",
+  "componentDir": "eva-text",
+  "modes": [
+    {
+      "id": "mode1",
+      "label": "短文本",
+      "fragment": "fragments/mode1.html",
+      "previewImage": "https://i0.hdslb.com/bfs/activity-plat/static/10613/11875/11876/20260805/d41d8cd98f00b204e9800998ecf8427e/LQ5Mhwrsyt.svg",
+      "fragmentUrl": "https://activity.hdslb.com/blackboard/static/d41d8cd98f00b204e9800998ecf8427e/eva-text-mode1.html",
+      "wireframe": {
+        "label": "短文本组件",
+        "variant": "text",
+        "state": "default",
+        "aspectRatio": "5/1",
+        "format": "svg"
+      }
+    },
+    {
+      "id": "mode2",
+      "label": "文本转图片",
+      "fragment": "fragments/mode2.html",
+      "previewImage": "https://i0.hdslb.com/bfs/activity-plat/static/10613/11875/11876/20260805/d41d8cd98f00b204e9800998ecf8427e/3kCt3Muzxq.svg",
+      "fragmentUrl": "https://activity.hdslb.com/blackboard/static/d41d8cd98f00b204e9800998ecf8427e/eva-text-mode2.html",
+      "wireframe": {
+        "label": "文本转图片组件",
+        "variant": "text-image",
+        "state": "default",
+        "aspectRatio": "5/1",
+        "format": "svg"
+      }
+    }
+  ],
+  "dataFields": [
+    {
+      "key": "content",
+      "label": "文案",
+      "type": "string",
+      "required": true,
+      "kind": "business-data",
+      "sourceProp": "content",
+      "description": "展示的文案内容"
+    }
+  ],
+  "sourceDefaults": {
+    "mode1": {
+      "fontSize": "12px（getRem(12)）",
+      "fontColor": "rgb(0, 0, 0)",
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "width": "自适应（null）",
+      "overflow": "hidden",
+      "wordWrap": "break-word"
+    },
+    "mode2": {
+      "width": "自适应（null）",
+      "height": "24px（getRem(24)）",
+      "backgroundSize": "contain"
+    }
+  },
+  "previewData": {
+    "mode1": {
+      "content": "示例文案"
+    },
+    "mode2": {
+      "content": "示例文案"
+    }
+  }
+}
