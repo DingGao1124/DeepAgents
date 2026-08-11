@@ -10,7 +10,9 @@ import {
   summarizationMiddleware,
   todoListMiddleware,
   toolCallLimitMiddleware,
+  toolRetryMiddleware,
 } from "langchain";
+import { loadMcpTools } from "./mcp.js";
 import { createDeepSeek, ModelName } from "./model.js";
 import {
   activityPermissions,
@@ -25,10 +27,10 @@ await ensureWorkspace();
 // Keep explicit domain delegation but disable the general-purpose subagent and
 // shell execution. No subagent defines interruptOn, so delegation cannot pause
 // on a nested approval.
-registerHarnessProfile("deepseek", {
-  excludedTools: ["execute"],
-  generalPurposeSubagent: { enabled: false },
-});
+// registerHarnessProfile("deepseek", {
+//   excludedTools: ["execute"],
+//   generalPurposeSubagent: { enabled: false },
+// });
 
 const SYSTEM_PROMPT = `你是活动页面生成 Agent，负责通过对话理解用户的页面搭建需求，将自然语言整理为清晰、可执行的页面配置，并完成相应的预览构建流程。
 
@@ -96,27 +98,37 @@ export const agent = createDeepAgent({
   name: "eva_activity_page_agent",
   model: createDeepSeek(ModelName.FLASH),
   systemPrompt: SYSTEM_PROMPT,
-  tools: pageTools,
+  tools: [...pageTools, ...await loadMcpTools()],
   backend,
   skills: runtimeSkills,
   subagents: activitySubagents,
   permissions: activityPermissions,
   middleware: [
     todoListMiddleware(),
+    toolRetryMiddleware({
+      maxRetries: 3,
+      initialDelayMs: 1000,
+      backoffFactor: 2,
+    }),
     modelRetryMiddleware({
       maxRetries: 2,
       initialDelayMs: 500,
       maxDelayMs: 4_000,
       onFailure: (error) => `模型服务暂时不可用：${error.message}。请向用户说明稍后重试。`,
     }),
-    modelCallLimitMiddleware({ runLimit: 24, exitBehavior: "end" }),
+    modelCallLimitMiddleware({ runLimit: 50, exitBehavior: "end" }),
     toolCallLimitMiddleware({ runLimit: 60, exitBehavior: "continue" }),
-    summarizationMiddleware({
-      model: createDeepSeek(ModelName.FLASH),
-      trigger: { tokens: 16_000 },
-      keep: { messages: 24 },
-    }),
+    // summarizationMiddleware({
+    //   model: createDeepSeek(ModelName.FLASH),
+    //   trigger: { messages: 30 },
+    //   keep: { messages: 20 },
+    // }),
   ],
+  interruptOn: {
+    write_file: true,
+    edit_file: true,
+    create_preview: true,
+  },
 });
 
 export { SANDBOX_DIR, SKILLS_DIR } from "./workspace.js";

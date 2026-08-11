@@ -24,7 +24,7 @@ app.get("/api/previews/:threadId/:fileName", async (c) => {
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "no-store, private",
         "Content-Security-Policy":
-          "sandbox allow-scripts allow-forms allow-popups; default-src 'self' https: data: blob:; img-src https: data: blob:; media-src https: data: blob:; style-src 'unsafe-inline' https:; script-src 'unsafe-inline' https:; connect-src https:; frame-ancestors 'self' http://localhost:5173",
+          "sandbox allow-scripts allow-forms allow-popups; default-src 'self' https: data: blob:; img-src https: data: blob:; media-src https: data: blob:; style-src 'unsafe-inline' https:; script-src 'unsafe-inline' https:; connect-src https:; frame-ancestors 'self' http://localhost:5173 https://ff-dev.bilibili.co",
         "Referrer-Policy": "no-referrer",
         "X-Content-Type-Options": "nosniff",
       },

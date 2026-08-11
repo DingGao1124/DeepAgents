@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useStream, type SubagentDiscoverySnapshot } from "@langchain/react";
 import { AIMessage, HumanMessage } from "langchain";
 import {
+  AlertCircleIcon,
   ArrowUpIcon,
   BotIcon,
   CheckCircle2Icon,
@@ -21,6 +22,7 @@ import {
   AGENT_URL,
   ASSISTANT_ID,
   THREAD_KEY,
+  client,
   type HITLRequest,
   type Decision,
 } from "./config";
@@ -146,12 +148,15 @@ function AgentWorkspace({
   const subagents = [...stream.subagents.values()];
   const subagentsByCallId = new Map(subagents.map((subagent) => [subagent.id, subagent]));
   const todos = ((stream.values as { todos?: Todo[] } | undefined)?.todos ?? []) as Todo[];
-  const interruptRequest = stream.interrupt?.value as HITLRequest | undefined;
+  const interrupts = stream.interrupts;
+  const interruptRequest = (interrupts[0]?.value ?? stream.interrupt?.value) as HITLRequest | undefined;
+  const hasInterrupt = interrupts.length > 0;
+  const streamError = stream.error ? String((stream.error as { message?: string })?.message ?? stream.error) : null;
   const title = conversationTitle(stream.messages);
 
   const send = () => {
     const text = input.trim();
-    if (!text || stream.isLoading || interruptRequest) return;
+    if (!text || stream.isLoading || hasInterrupt) return;
     setInput("");
     void stream
       .submit(
@@ -166,6 +171,18 @@ function AgentWorkspace({
     onReconnect();
   };
 
+  const handleDeleteThread = async (id: string) => {
+    try {
+      await client.threads.delete(id);
+    } catch {
+      // ignore delete errors
+    }
+    if (id === threadId) {
+      onNewThread();
+    }
+    onConversationRefresh();
+  };
+
   const resume = (decisions: Decision[]) => stream.respond({ decisions });
 
   return (
@@ -176,7 +193,7 @@ function AgentWorkspace({
             <div className="flex size-7 items-center justify-center rounded-lg bg-foreground text-background">
               <SparklesIcon className="size-4" />
             </div>
-            <span className="text-sm font-semibold tracking-tight">DeepAgent</span>
+            <span className="text-sm font-semibold tracking-tight">Eva Activity Agent</span>
           </div>
           <Button variant="ghost" size="icon-sm" aria-label="收起侧边栏" disabled>
             <PanelLeftIcon />
@@ -219,6 +236,7 @@ function AgentWorkspace({
           <ConversationList
             activeThreadId={threadId}
             onSelect={onOpenThread}
+            onDelete={handleDeleteThread}
             refreshSignal={conversationRefresh}
           />
         </div>
@@ -228,7 +246,7 @@ function AgentWorkspace({
             DA
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">DeepAgent Console</p>
+            <p className="truncate text-sm font-medium">Eva Activity Agent</p>
             <p className="truncate text-xs text-muted-foreground">sandbox workspace</p>
           </div>
         </div>
@@ -244,13 +262,15 @@ function AgentWorkspace({
             </Button>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <Badge variant={stream.isLoading ? "warning" : "outline"}>
-              {stream.isLoading ? (
+            <Badge variant={hasInterrupt || stream.isLoading ? "warning" : "outline"}>
+              {hasInterrupt ? (
+                <AlertCircleIcon data-icon="inline-start" />
+              ) : stream.isLoading ? (
                 <Spinner data-icon="inline-start" />
               ) : (
                 <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
               )}
-              {stream.isLoading ? "运行中" : "就绪"}
+              {hasInterrupt ? "等待审批" : stream.isLoading ? "运行中" : "就绪"}
             </Badge>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -310,6 +330,11 @@ function AgentWorkspace({
                     const isHuman = HumanMessage.isInstance(message);
                     const isAI = AIMessage.isInstance(message);
                     if (!isHuman && !isAI) return null;
+
+                    // 过滤掉 summarizationMiddleware 注入的摘要消息，否则会显示在对话最前面
+                    const extra = (message.additional_kwargs ?? {}) as Record<string, unknown>;
+                    if (extra.lc_source === "summarization") return null;
+
                     const isLast = index === stream.messages.length - 1;
                     const streaming = isAI && isLast && stream.isLoading;
 
@@ -334,8 +359,8 @@ function AgentWorkspace({
                     );
                   })}
 
-                  {stream.isLoading && !interruptRequest && (
-                    <MessageScrollerItem messageId="working">
+                  {stream.isLoading && !hasInterrupt && !streamError && (
+                    <MessageScrollerItem messageId="working" scrollAnchor>
                       <Message>
                         <MessageContent>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -347,8 +372,21 @@ function AgentWorkspace({
                     </MessageScrollerItem>
                   )}
 
+                  {streamError && !hasInterrupt && (
+                    <MessageScrollerItem messageId="error" scrollAnchor>
+                      <Message>
+                        <MessageContent>
+                          <div className="flex items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                            <AlertCircleIcon className="size-4 shrink-0" />
+                            <span>{streamError}</span>
+                          </div>
+                        </MessageContent>
+                      </Message>
+                    </MessageScrollerItem>
+                  )}
+
                   {interruptRequest && (
-                    <MessageScrollerItem messageId="approval">
+                    <MessageScrollerItem messageId="approval" scrollAnchor>
                       <ApprovalCard
                         request={interruptRequest}
                         disabled={stream.isLoading}
@@ -369,9 +407,9 @@ function AgentWorkspace({
                 value={input}
                 rows={2}
                 placeholder={
-                  interruptRequest ? "请先处理上方的审批请求…" : "输入任务或问题…"
+                  hasInterrupt ? "请先处理上方的审批请求…" : "输入任务或问题…"
                 }
-                disabled={stream.isLoading || !!interruptRequest}
+                disabled={stream.isLoading || hasInterrupt}
                 onChange={(event) => setInput(event.target.value)}
                 onKeyDown={(event) => {
                   if (
@@ -397,7 +435,7 @@ function AgentWorkspace({
                     size="icon"
                     className="rounded-full"
                     aria-label="发送消息"
-                    disabled={stream.isLoading || !!interruptRequest || !input.trim()}
+                    disabled={stream.isLoading || hasInterrupt || !input.trim()}
                     onClick={send}
                   >
                     <ArrowUpIcon />

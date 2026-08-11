@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrainCircuitIcon, ChevronRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Bubble, BubbleContent } from "@/components/ui/bubble";
@@ -11,6 +11,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Markdown } from "@/components/Markdown";
 import { cn } from "@/lib/utils";
+import { useAutoScroll } from "@/lib/use-auto-scroll";
 
 export function ReasoningBlock({
   reasoning,
@@ -20,6 +21,24 @@ export function ReasoningBlock({
   streaming: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [live, setLive] = useState(false);
+  const { containerRef, onScroll } = useAutoScroll(live && open);
+
+  // 思考内容在持续更新时展开；一旦内容停止变化（思考解析完毕）立即折叠，不等正文输出完。
+  useEffect(() => {
+    if (!streaming) {
+      setLive(false);
+      setOpen(false);
+      return;
+    }
+    setLive(true);
+    setOpen(true);
+    const timer = setTimeout(() => {
+      setLive(false);
+      setOpen(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [streaming, reasoning]);
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="max-w-full">
@@ -31,7 +50,7 @@ export function ReasoningBlock({
           />
           <BrainCircuitIcon data-icon="inline-start" />
           思考过程
-          {streaming ? (
+          {live ? (
             <Badge variant="warning">
               <Spinner data-icon="inline-start" />
               live
@@ -47,6 +66,8 @@ export function ReasoningBlock({
             <Markdown
               content={reasoning}
               className="max-h-80 overflow-y-auto text-sm text-muted-foreground"
+              ref={containerRef}
+              onScroll={onScroll}
             />
           </BubbleContent>
         </Bubble>

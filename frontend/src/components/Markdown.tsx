@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import { forwardRef, type ComponentProps } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
@@ -63,14 +63,23 @@ const components: Components = {
     <td className={cn("border-b px-3 py-2 align-top last:border-r-0", className)} {...props} />
   ),
   hr: ({ className, ...props }) => <hr className={cn("my-4 border-border", className)} {...props} />,
+  img: ({ className, ...props }) => (
+    <img
+      className={cn("max-w-full h-auto rounded-lg my-3", className)}
+      loading="lazy"
+      {...props}
+    />
+  ),
 };
 
-export function Markdown({ content, className, ...props }: ComponentProps<"div"> & { content: string }) {
-  return (
-    <div className={cn("min-w-0 space-y-3 text-[15px] leading-7", className)} {...props}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components} skipHtml>
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
-}
+export const Markdown = forwardRef<HTMLDivElement, ComponentProps<"div"> & { content: string }>(
+  function Markdown({ content, className, ...props }, ref) {
+    return (
+      <div ref={ref} className={cn("min-w-0 space-y-3 text-[15px] leading-7", className)} {...props}>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components} skipHtml>
+          {content}
+        </ReactMarkdown>
+      </div>
+    );
+  },
+);

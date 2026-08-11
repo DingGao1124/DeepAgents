@@ -1,4 +1,5 @@
 import { ChatDeepSeek } from "@langchain/deepseek";
+import { ChatOpenAI } from "@langchain/openai";
 
 export enum ModelName {
   FLASH = "deepseek-v4-flash",
