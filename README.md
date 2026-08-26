@@ -1,4 +1,4 @@
-# Eva Activity Page Agent
+# Langchain-Powered AI Agent
 
 面向运营的活动页生成 Agent：用户用自然语言描述页面、组件、内容和目标场景，后端把需求转换为 Eva 单文件页面，完成确定性校验并返回真实预览链接。
 
