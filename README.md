@@ -1,6 +1,15 @@
-# Web Page Automation Agent
+# DeepAgents for Web Development
 
-Web Page Automation Agent turns a key visual (KV), wireframe, content, and viewport requirements into a visual design, responsive HTML, and an isolated browser preview. It is implemented around the concept of **Harness Engineering**, using planning, memory, sandboxed workspaces, on-demand Skills, specialist subagents, approval checkpoints, and deterministic validation to keep the visual-to-code workflow reliable.
+DeepAgents for Web Development turns a key visual (KV), wireframe, content, and viewport requirements into a visual design, responsive HTML, and an isolated browser preview. Rather than relying on the model alone, it is implemented around the concept of **Harness Engineering**: a controlled runtime supplies the agent with context, planning, memory, scoped capabilities, specialist delegation, human checkpoints, and deterministic quality gates.
+
+## 🌟 Key Features
+
+- **Harness-first execution** — surrounds model calls with state, permissions, retries, budgets, and validation.
+- **Visual-to-code pipeline** — moves from visual references to design, responsive HTML, and preview.
+- **Governed delegation** — assigns design, implementation, and review to bounded specialist subagents.
+- **Human control and observability** — streams plans, reasoning, tools, and approval requests to the UI.
+- **Isolated artifacts** — scopes drafts, uploads, final pages, and previews to individual threads.
+- **Extensible capabilities** — loads reusable Skills and optional MCP tools without coupling them to the core agent.
 
 ## ✨ Workflow
 
@@ -24,12 +33,13 @@ Visual generation is available when an image-capable MCP tool is connected; othe
 └──────────────────────────────────────┬────────────────────────────────────────┘
                                        │ @langchain/react useStream
                                        ▼
-┌──────────────────────────── LangGraph API :2024 ─────────────────────────────┐
+┌──────────────────────── LangGraph Agent Harness :2024 ───────────────────────┐
 │ Web Page Automation Agent                                                    │
 │                                                                              │
-│  Planning / retries / budgets      Read-only, on-demand Skills               │
-│  Thread-scoped state               Design / HTML / review subagents           │
-│  HTML validation and preview       Optional MCP tools                        │
+│  Control   Planning · retries · call budgets · approval interrupts           │
+│  Context   Thread state · system instructions · on-demand Skills             │
+│  Workers   Design Planner · HTML Builder · Quality Reviewer                  │
+│  Gates     Filesystem permissions · HTML validation · preview publication    │
 └────────────────────────┬─────────────────────────────┬─────────────────────────┘
                          │                             │
                          ▼                             ▼
@@ -47,7 +57,24 @@ Visual generation is available when an image-capable MCP tool is connected; othe
 └───────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Harness:** 🧠 thread memory · 📁 workspace isolation · 🧰 Skill management · 🤝 specialist delegation · ✋ approval interrupts · 🛡️ retries, budgets, and validation
+## 🧠 Harness Engineering
+
+The harness turns an open-ended model into a bounded system that can plan, delegate, recover, and produce verifiable artifacts.
+
+| Layer | Project implementation | Purpose |
+| --- | --- | --- |
+| 🧭 Planning | Todo middleware and streamed run state | Makes multi-step work visible and resumable |
+| 🧠 Memory | LangGraph thread state | Retains conversation and execution context |
+| 🧰 Context | Read-only Skills loaded on demand | Supplies task knowledge without inflating every prompt |
+| 🤝 Delegation | Design, HTML, and review subagents | Isolates roles, tools, and filesystem permissions |
+| 📁 Sandbox | Per-thread virtual filesystem | Contains uploads, drafts, artifacts, and large results |
+| ✋ Oversight | Interrupts for writes, edits, and previews | Keeps consequential actions under user control |
+| 🔁 Resilience | Model/tool retries and call budgets | Bounds transient failures and runaway loops |
+| 🛡️ Verification | Fixed HTML validator before publication | Prevents unchecked artifacts from becoming previews |
+
+```text
+Request → assemble context → plan → delegate → approve write → validate → approve preview
+```
 
 ## 🛠️ Runtime Skills
 
