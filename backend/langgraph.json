@@ -7,10 +7,7 @@
   "http": {
     "app": "./src/http.ts:app",
     "cors": {
-      "allow_origins": [
-        "http://localhost:5173",
-        "https://ff-dev.bilibili.co"
-      ],
+      "allow_origins": ["http://localhost:5173"],
       "allow_methods": ["GET", "POST", "OPTIONS", "DELETE"],
       "allow_headers": ["*"]
     }

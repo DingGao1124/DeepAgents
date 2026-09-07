@@ -1,9 +1,9 @@
 /**
- * MCP 客户端 — 从环境变量 MCP_SERVERS 加载远端工具注入 Agent。
+ * MCP client: load remote tools from the MCP_SERVERS environment variable.
  *
  *   MCP_SERVERS={"name":{"url":"http://localhost:8000/mcp","transport":"http","headers":{...}}}
  *
- * transport: "http" | "sse"，默认 http。
+ * transport: "http" | "sse"; defaults to HTTP.
  */
 
 import { MultiServerMCPClient } from "@langchain/mcp-adapters";
@@ -24,12 +24,12 @@ export function parseMcpServersFromEnv(): McpServersConfig {
   try {
     const parsed = JSON.parse(raw);
     if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-      console.warn("[MCP] MCP_SERVERS 应为 JSON 对象，已忽略");
+      console.warn("[MCP] MCP_SERVERS must be a JSON object; ignoring it");
       return {};
     }
     return parsed as McpServersConfig;
   } catch {
-    console.warn("[MCP] MCP_SERVERS 非法 JSON，已忽略");
+    console.warn("[MCP] MCP_SERVERS contains invalid JSON; ignoring it");
     return {};
   }
 }
@@ -39,7 +39,7 @@ function toClientConfig(servers: McpServersConfig): Record<string, McpServerConf
 
   for (const [name, server] of Object.entries(servers)) {
     if (!server.url) {
-      console.warn(`[MCP] 跳过 "${name}"：缺 url`);
+      console.warn(`[MCP] Skipping "${name}": missing url`);
       continue;
     }
     config[name] = {

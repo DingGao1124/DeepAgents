@@ -143,23 +143,23 @@ export function resolveSandboxFile(
   allowedRoots: readonly string[] = ["drafts", "artifacts", "uploads"],
 ): string {
   if (!virtualPath.startsWith("/") || virtualPath.includes("\\") || virtualPath.includes("\0")) {
-    throw new Error("文件路径必须是工作区内的 POSIX 绝对路径，例如 /drafts/page.html。");
+    throw new Error("The file path must be a POSIX absolute path inside the workspace, such as /drafts/page.html.");
   }
 
   const normalized = path.posix.normalize(virtualPath);
   const root = normalized.split("/")[1] || "";
   if (!allowedRoots.includes(root)) {
-    throw new Error(`只允许访问：${allowedRoots.map((item) => `/${item}/`).join("、")}`);
+    throw new Error(`Access is limited to: ${allowedRoots.map((item) => `/${item}/`).join(", ")}`);
   }
   if (path.posix.extname(normalized).toLowerCase() !== ".html") {
-    throw new Error("页面文件必须使用 .html 扩展名。");
+    throw new Error("Page files must use the .html extension.");
   }
 
   const threadRoot = getThreadSandboxDir(threadId);
   const resolved = path.resolve(threadRoot, `.${normalized}`);
   const relative = path.relative(threadRoot, resolved);
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error("文件路径越过了工作区边界。");
+    throw new Error("The file path escapes the workspace boundary.");
   }
   return resolved;
 }
@@ -171,7 +171,7 @@ export interface ValidationResult {
   message: string;
 }
 
-export async function validateEvaPageFile(
+export async function validateHtmlPageFile(
   virtualPath: string,
   threadId = "local",
 ): Promise<ValidationResult> {
@@ -179,9 +179,9 @@ export async function validateEvaPageFile(
   const absolutePath = resolveSandboxFile(virtualPath, threadId, ["drafts", "artifacts"]);
   const validator = path.join(
     SKILLS_DIR,
-    "eva-page-template-spec",
+    "html-quality",
     "scripts",
-    "validate-eva-page.mjs",
+    "validate-html.mjs",
   );
 
   try {
@@ -195,7 +195,7 @@ export async function validateEvaPageFile(
       ok: true,
       path: virtualPath,
       errors: [],
-      message: stdout.trim() || "页面校验通过。",
+      message: stdout.trim() || "Page validation passed.",
     };
   } catch (error) {
     const details = error as NodeJS.ErrnoException & { stderr?: string; stdout?: string };
@@ -212,7 +212,7 @@ export async function validateEvaPageFile(
       ok: false,
       path: virtualPath,
       errors,
-      message: errors[0] || "页面校验失败。",
+      message: errors[0] || "Page validation failed.",
     };
   }
 }
@@ -224,7 +224,7 @@ export async function publishPreview(
   await ensureWorkspace();
   const source = resolveSandboxFile(virtualPath, threadId, ["drafts", "artifacts"]);
   const parsed = path.parse(source);
-  const slug = safeSegment(parsed.name, "activity-page").slice(0, 80);
+  const slug = safeSegment(parsed.name, "web-page").slice(0, 80);
   const fileName = `${slug}-${randomUUID().slice(0, 8)}.html`;
   const safeThread = safeSegment(threadId, "local");
   const threadFolder = path.join(PREVIEW_DIR, safeThread);
@@ -243,12 +243,12 @@ export async function publishPreview(
 export function resolvePublishedPreview(threadId: string, fileName: string): string {
   const safeThread = safeSegment(threadId, "local");
   if (safeThread !== threadId || !/^[A-Za-z0-9_-]{1,96}\.html$/.test(fileName)) {
-    throw new Error("预览地址不合法。");
+    throw new Error("The preview path is invalid.");
   }
   const resolved = path.resolve(PREVIEW_DIR, safeThread, fileName);
   const relative = path.relative(PREVIEW_DIR, resolved);
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error("预览路径越过了发布目录。");
+    throw new Error("The preview path escapes the publication directory.");
   }
   return resolved;
 }

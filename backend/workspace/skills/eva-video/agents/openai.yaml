@@ -1,4 +1,0 @@
-interface:
-  display_name: "Eva Video"
-  short_description: "Generate a source-baseline Eva video fragment with autoplay fallback behavior."
-  default_prompt: "Use $eva-video with the provided video, fallback image, and optional poster business assets."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Design"
+  short_description: "Generate a page design from a key visual and wireframe."
+  default_prompt: "Use $visual-design to create an implementation-ready page design from my key visual and wireframe."

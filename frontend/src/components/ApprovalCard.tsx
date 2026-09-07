@@ -67,7 +67,7 @@ export function ApprovalCard({ request, disabled, onResume }: Props) {
             },
           });
         } catch {
-          setError(`操作 ${index + 1}（${actionRequests[index].name}）的参数不是有效 JSON。`);
+          setError(`Arguments for action ${index + 1} (${actionRequests[index].name}) are not valid JSON.`);
           return;
         }
       } else {
@@ -90,9 +90,10 @@ export function ApprovalCard({ request, disabled, onResume }: Props) {
   return (
     <Alert>
       <ShieldAlertIcon />
-      <AlertTitle>需要你的批准</AlertTitle>
+      <AlertTitle>Approval required</AlertTitle>
       <AlertDescription>
-        Agent 准备执行 {actionRequests.length} 个敏感操作。请检查参数后批准或拒绝。
+        The agent is ready to perform {actionRequests.length} sensitive action(s). Review the
+        arguments, then approve or reject them.
       </AlertDescription>
 
       <div className="col-span-full mt-4">
@@ -113,29 +114,29 @@ export function ApprovalCard({ request, disabled, onResume }: Props) {
               )}
 
               <FieldGroup>
-                <Field data-invalid={!!error && error.includes(`操作 ${index + 1}`)}>
+                <Field data-invalid={!!error && error.includes(`action ${index + 1}`)}>
                   <FieldLabel htmlFor={`approval-args-${index}`}>
-                    参数 {allowed(index).includes("edit") ? "（可编辑 JSON）" : "（只读）"}
+                    Arguments {allowed(index).includes("edit") ? "(editable JSON)" : "(read-only)"}
                   </FieldLabel>
                   <Textarea
                     id={`approval-args-${index}`}
                     value={argsText[index]}
                     readOnly={disabled || !allowed(index).includes("edit")}
-                    aria-invalid={!!error && error.includes(`操作 ${index + 1}`)}
+                    aria-invalid={!!error && error.includes(`action ${index + 1}`)}
                     spellCheck={false}
                     rows={Math.min(10, argsText[index].split("\n").length + 1)}
                     onChange={(event) => setArgs(index, event.target.value)}
                   />
-                  {!!error && error.includes(`操作 ${index + 1}`) && (
+                  {!!error && error.includes(`action ${index + 1}`) && (
                     <FieldError>{error}</FieldError>
                   )}
                 </Field>
 
                 <Field>
-                  <FieldLabel htmlFor={`approval-reject-${index}`}>拒绝原因</FieldLabel>
+                  <FieldLabel htmlFor={`approval-reject-${index}`}>Reason for rejection</FieldLabel>
                   <Input
                     id={`approval-reject-${index}`}
-                    placeholder="可选；拒绝时会发送给 Agent"
+                    placeholder="Optional feedback sent to the agent"
                     value={rejectMessages[index]}
                     disabled={disabled}
                     onChange={(event) => setRejectMessage(index, event.target.value)}
@@ -151,11 +152,11 @@ export function ApprovalCard({ request, disabled, onResume }: Props) {
         <div className="mt-4 flex flex-wrap gap-2">
           <Button disabled={disabled} onClick={approve}>
             <CheckIcon data-icon="inline-start" />
-            全部批准
+            Approve all
           </Button>
           <Button variant="destructive" disabled={disabled} onClick={reject}>
             <XIcon data-icon="inline-start" />
-            全部拒绝
+            Reject all
           </Button>
         </div>
       </div>

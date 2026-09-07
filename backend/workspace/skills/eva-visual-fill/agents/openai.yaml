@@ -1,4 +1,0 @@
-interface:
-  display_name: "Eva Visual Fill"
-  short_description: "支持参考图或语言描述的 Eva 整页受控换肤"
-  default_prompt: "Use $eva-visual-fill to restyle my HTML from an uploaded prototype and KV, or automatically render an HTML baseline and use my written style description when no screenshot or KV is provided, while preserving structure, copy, and positions."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Eva Text"
-  short_description: "Generate an Eva short-text fragment that renders operator-provided copy from dataFields."
-  default_prompt: "Use $eva-text to generate a short-text fragment for the Eva activity page."

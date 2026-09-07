@@ -34,7 +34,7 @@ function deriveTitle(values: unknown): string {
     return false;
   });
 
-  if (!firstHuman) return "空对话";
+  if (!firstHuman) return "Empty conversation";
 
   const content =
     firstHuman.content ?? (firstHuman.kwargs as Record<string, unknown>)?.content;
@@ -52,7 +52,7 @@ function deriveTitle(values: unknown): string {
             .join("")
         : "";
   const trimmed = raw.trim().replace(/\s+/g, " ");
-  return trimmed ? trimmed.slice(0, 48) : "空对话";
+  return trimmed ? trimmed.slice(0, 48) : "Empty conversation";
 }
 
 function formatUpdatedAt(value: string): string {
@@ -100,7 +100,7 @@ export function ConversationList({
 
       const summaries: ThreadSummary[] = [];
       for (const thread of results) {
-        let title = "空对话";
+        let title = "Empty conversation";
         try {
           const state = await client.threads.getState(thread.thread_id);
           title = deriveTitle(state.values);
@@ -130,12 +130,12 @@ export function ConversationList({
       {error && (
         <Alert variant="destructive">
           <AlertCircleIcon />
-          <AlertTitle>无法加载历史记录</AlertTitle>
+          <AlertTitle>Could not load conversation history</AlertTitle>
           <AlertDescription className="flex flex-col gap-2">
             <span className="line-clamp-2">{error}</span>
             <Button variant="outline" size="xs" onClick={() => void load()}>
               <RefreshCwIcon data-icon="inline-start" />
-              重试
+              Retry
             </Button>
           </AlertDescription>
         </Alert>
@@ -155,8 +155,8 @@ export function ConversationList({
             <EmptyMedia variant="icon">
               <MessageCircleIcon />
             </EmptyMedia>
-            <EmptyTitle>还没有对话</EmptyTitle>
-            <EmptyDescription>发送第一条消息后会保存在这里。</EmptyDescription>
+            <EmptyTitle>No conversations yet</EmptyTitle>
+            <EmptyDescription>Your conversations will appear here after the first message.</EmptyDescription>
           </EmptyHeader>
         </Empty>
       )}
@@ -171,13 +171,13 @@ export function ConversationList({
                 {confirming ? (
                   <div className="flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-1.5">
                     <span className="min-w-0 flex-1 truncate text-xs text-destructive">
-                      确认删除？
+                      Delete this conversation?
                     </span>
                     <Button
                       variant="ghost"
                       size="icon-xs"
                       className="text-destructive hover:bg-destructive/20"
-                      aria-label="确认删除"
+                      aria-label="Confirm deletion"
                       onClick={() => {
                         onDelete(thread.threadId);
                         setDeletingId(null);
@@ -188,7 +188,7 @@ export function ConversationList({
                     <Button
                       variant="ghost"
                       size="icon-xs"
-                      aria-label="取消"
+                      aria-label="Cancel"
                       onClick={() => setDeletingId(null)}
                     >
                       <XIcon />
@@ -212,7 +212,7 @@ export function ConversationList({
                     variant="ghost"
                     size="icon-xs"
                     className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    aria-label="删除对话"
+                    aria-label="Delete conversation"
                     onClick={(e) => {
                       e.stopPropagation();
                       setDeletingId(thread.threadId);

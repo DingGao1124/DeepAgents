@@ -15,17 +15,16 @@ import { safeJsonStringify, type DisplayContentBlock } from "@/lib/message-conte
 type ToolCallBlock = Extract<DisplayContentBlock, { type: "tool_call" }>;
 
 const TOOL_LABELS: Record<string, string> = {
-  read_file: "读取文件",
-  write_file: "写入文件",
-  edit_file: "编辑文件",
-  list_eva_components: "读取 Eva 组件目录",
-  validate_eva_page: "校验活动页",
-  create_preview: "创建页面预览",
-  write_todos: "更新任务计划",
-  task: "委派子智能体",
-  ls: "查看目录",
-  glob: "查找文件",
-  grep: "搜索内容",
+  read_file: "Read file",
+  write_file: "Write file",
+  edit_file: "Edit file",
+  validate_html_page: "Validate HTML page",
+  create_preview: "Create page preview",
+  write_todos: "Update task plan",
+  task: "Delegate to subagent",
+  ls: "List directory",
+  glob: "Find files",
+  grep: "Search content",
 };
 
 function argumentSummary(args: unknown): string {
@@ -68,14 +67,14 @@ export function ToolCallCard({ block, running }: { block: ToolCallBlock; running
                 ? "bg-warning ring-warning/20 animate-pulse"
                 : "bg-success ring-success/20",
           )}
-          title={failed ? "错误" : running ? "运行中" : "已完成"}
+          title={failed ? "Error" : running ? "Running" : "Complete"}
         />
         <CollapsibleTrigger asChild>
           <Button
             variant="ghost"
             size="icon-xs"
             className="-mr-1 shrink-0 opacity-50 transition-opacity group-hover/tool:opacity-100"
-            aria-label="展开详情"
+            aria-label="Expand details"
           >
             <ChevronRightIcon className={cn("size-3 transition-transform", open && "rotate-90")} />
           </Button>

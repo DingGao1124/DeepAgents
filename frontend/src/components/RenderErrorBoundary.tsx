@@ -32,9 +32,9 @@ export class RenderErrorBoundary extends Component<
     return (
       <Alert variant="destructive">
         <AlertCircleIcon />
-        <AlertTitle>{this.props.title ?? "这部分内容暂时无法显示"}</AlertTitle>
+        <AlertTitle>{this.props.title ?? "This content is temporarily unavailable"}</AlertTitle>
         <AlertDescription className="flex flex-col gap-2">
-          <span>收到了一条无法识别的消息格式，其他内容仍可继续使用。</span>
+          <span>An unrecognized message format was received. Other content remains available.</span>
           <Button
             variant="outline"
             size="xs"
@@ -42,7 +42,7 @@ export class RenderErrorBoundary extends Component<
             onClick={() => window.location.reload()}
           >
             <RefreshCwIcon data-icon="inline-start" />
-            重新加载
+            Reload
           </Button>
         </AlertDescription>
       </Alert>

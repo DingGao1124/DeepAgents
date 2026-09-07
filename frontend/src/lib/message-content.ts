@@ -65,7 +65,7 @@ export function safeJsonStringify(value: unknown): string {
       2,
     );
   } catch {
-    return "[无法显示的结构化内容]";
+    return "[Structured content cannot be displayed]";
   }
 }
 
@@ -140,7 +140,7 @@ function parseBlock(
       type: "tool_call",
       key,
       id: callId(record),
-      name: stringValue(record.name) ?? "工具调用",
+      name: stringValue(record.name) ?? "Tool call",
       args: record.args ?? record.input ?? {},
     });
     return;

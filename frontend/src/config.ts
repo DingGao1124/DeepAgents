@@ -7,7 +7,7 @@ export const AGENT_URL = "http://localhost:2024";
 export const ASSISTANT_ID = "agent";
 
 // sessionStorage key for the active thread (used for reconnect + history).
-export const THREAD_KEY = "deepagent.activeThreadId";
+export const THREAD_KEY = "web-page-agent.activeThreadId";
 
 // Shared SDK client for listing past conversations (threads).
 export const client = new Client({ apiUrl: AGENT_URL });

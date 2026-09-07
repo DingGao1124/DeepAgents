@@ -1,4 +1,0 @@
-interface:
-  display_name: "Eva Style Ref"
-  short_description: "根据 KV 和原型截图生成视觉稿或风格锚点图，供 eva-visual-fill 换皮使用"
-  default_prompt: "Use $eva-style-ref to generate a visual reference from my KV and prototype screenshot (visual draft mode), or generate a 256x256 style anchor image from KV only (anchor mode), for use with eva-visual-fill."

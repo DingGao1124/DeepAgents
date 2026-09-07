@@ -73,7 +73,7 @@ type Todo = { content: string; status: string };
 function conversationTitle(messages: unknown[]): string {
   const firstHuman = messages.find((message) => HumanMessage.isInstance(message));
   const title = messageText(firstHuman).trim().replace(/\s+/g, " ");
-  return title ? title.slice(0, 44) : "新的对话";
+  return title ? title.slice(0, 44) : "New conversation";
 }
 
 export function App() {
@@ -193,44 +193,44 @@ function AgentWorkspace({
             <div className="flex size-7 items-center justify-center rounded-lg bg-foreground text-background">
               <SparklesIcon className="size-4" />
             </div>
-            <span className="text-sm font-semibold tracking-tight">Eva Activity Agent</span>
+            <span className="text-sm font-semibold tracking-tight">Web Page Automation Agent</span>
           </div>
-          <Button variant="ghost" size="icon-sm" aria-label="收起侧边栏" disabled>
+          <Button variant="ghost" size="icon-sm" aria-label="Collapse sidebar" disabled>
             <PanelLeftIcon />
           </Button>
         </div>
 
-        <nav className="flex shrink-0 flex-col gap-1 px-3 pb-3" aria-label="主导航">
+        <nav className="flex shrink-0 flex-col gap-1 px-3 pb-3" aria-label="Main navigation">
           <Button variant="ghost" className="w-full justify-start" onClick={onNewThread}>
             <PlusIcon data-icon="inline-start" />
-            新对话
+            New conversation
           </Button>
           <Button variant="ghost" className="w-full justify-start" disabled>
             <GitPullRequestIcon data-icon="inline-start" />
-            运行记录
+            Runs
           </Button>
           <Button variant="ghost" className="w-full justify-start" disabled>
             <Clock3Icon data-icon="inline-start" />
-            已安排
+            Scheduled
           </Button>
         </nav>
 
         <Separator />
         <div className="flex min-h-0 flex-1 flex-col px-3 pt-4">
           <div className="mb-2 flex items-center justify-between px-2">
-            <span className="text-xs font-medium text-muted-foreground">对话</span>
+            <span className="text-xs font-medium text-muted-foreground">Conversations</span>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  aria-label="新建对话"
+                  aria-label="New conversation"
                   onClick={onNewThread}
                 >
                   <PlusIcon />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>新建对话</TooltipContent>
+              <TooltipContent>New conversation</TooltipContent>
             </Tooltip>
           </div>
           <ConversationList
@@ -243,11 +243,11 @@ function AgentWorkspace({
 
         <div className="flex shrink-0 items-center gap-3 border-t px-4 py-3">
           <div className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-            DA
+            WP
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">Eva Activity Agent</p>
-            <p className="truncate text-xs text-muted-foreground">sandbox workspace</p>
+            <p className="truncate text-sm font-medium">Web Page Automation Agent</p>
+            <p className="truncate text-xs text-muted-foreground">sandboxed workspace</p>
           </div>
         </div>
       </aside>
@@ -257,7 +257,7 @@ function AgentWorkspace({
           <div className="flex min-w-0 items-center gap-2.5">
             <FolderIcon className="size-4 shrink-0 text-muted-foreground" />
             <h1 className="truncate text-sm font-semibold">{title}</h1>
-            <Button variant="ghost" size="icon-xs" aria-label="更多操作" disabled>
+            <Button variant="ghost" size="icon-xs" aria-label="More actions" disabled>
               <MoreHorizontalIcon />
             </Button>
           </div>
@@ -270,21 +270,21 @@ function AgentWorkspace({
               ) : (
                 <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
               )}
-              {hasInterrupt ? "等待审批" : stream.isLoading ? "运行中" : "就绪"}
+              {hasInterrupt ? "Awaiting approval" : stream.isLoading ? "Running" : "Ready"}
             </Badge>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="重新连接"
+                  aria-label="Reconnect"
                   disabled={!threadId}
                   onClick={() => void reconnect()}
                 >
                   <RefreshCwIcon />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>重新连接当前线程</TooltipContent>
+              <TooltipContent>Reconnect current thread</TooltipContent>
             </Tooltip>
           </div>
         </header>
@@ -301,16 +301,17 @@ function AgentWorkspace({
                           <EmptyMedia variant="icon">
                             <BotIcon />
                           </EmptyMedia>
-                          <EmptyTitle>从一个活动页需求开始</EmptyTitle>
+                          <EmptyTitle>Turn a visual concept into a working web page</EmptyTitle>
                           <EmptyDescription>
-                            我可以理解页面需求、编排 Eva 组件，并通过领域子智能体完成组装、审查和预览。
+                            Provide a key visual and wireframe. I can plan the design, implement the
+                            responsive HTML, validate it, and publish an isolated preview.
                           </EmptyDescription>
                         </EmptyHeader>
                         <EmptyContent>
                           {[
-                            "做一个包含 KV、关注和抽奖的 H5 活动页",
-                            "分析正式活动页还缺少哪些业务参数",
-                            "审查现有活动页并生成预览",
+                            "Create a responsive landing page from these key visual and wireframe URLs",
+                            "Develop a visual direction for this wireframe using my reference artwork",
+                            "Convert this approved design into HTML and publish a preview",
                           ].map((suggestion) => (
                             <Button
                               key={suggestion}
@@ -331,7 +332,7 @@ function AgentWorkspace({
                     const isAI = AIMessage.isInstance(message);
                     if (!isHuman && !isAI) return null;
 
-                    // 过滤掉 summarizationMiddleware 注入的摘要消息，否则会显示在对话最前面
+                    // Hide summary messages injected by summarizationMiddleware so they do not appear first.
                     const extra = (message.additional_kwargs ?? {}) as Record<string, unknown>;
                     if (extra.lc_source === "summarization") return null;
 
@@ -365,7 +366,7 @@ function AgentWorkspace({
                         <MessageContent>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Spinner />
-                            <span className="shimmer">正在处理…</span>
+                            <span className="shimmer">Working…</span>
                           </div>
                         </MessageContent>
                       </Message>
@@ -407,7 +408,7 @@ function AgentWorkspace({
                 value={input}
                 rows={2}
                 placeholder={
-                  hasInterrupt ? "请先处理上方的审批请求…" : "输入任务或问题…"
+                  hasInterrupt ? "Review the approval request above first…" : "Enter a task or question…"
                 }
                 disabled={stream.isLoading || hasInterrupt}
                 onChange={(event) => setInput(event.target.value)}
@@ -424,17 +425,17 @@ function AgentWorkspace({
               />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon-sm" aria-label="添加附件" disabled>
+                  <Button variant="ghost" size="icon-sm" aria-label="Add attachment" disabled>
                     <PlusIcon />
                   </Button>
-                  <Badge variant="outline">工作区访问</Badge>
+                  <Badge variant="outline">Workspace access</Badge>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-muted-foreground">DeepSeek</span>
                   <Button
                     size="icon"
                     className="rounded-full"
-                    aria-label="发送消息"
+                    aria-label="Send message"
                     disabled={stream.isLoading || hasInterrupt || !input.trim()}
                     onClick={send}
                   >
@@ -473,11 +474,11 @@ function ActivityPanel({
   return (
     <Card size="sm" className="m-4 max-h-[calc(100dvh-2rem)] overflow-y-auto shadow-sm">
       <CardHeader>
-        <CardTitle>运行状态</CardTitle>
-        <CardDescription>{threadId ? `线程 ${threadId.slice(0, 8)}` : "尚未创建线程"}</CardDescription>
+        <CardTitle>Run status</CardTitle>
+        <CardDescription>{threadId ? `Thread ${threadId.slice(0, 8)}` : "No thread yet"}</CardDescription>
         <CardAction>
           <Badge variant={loading ? "warning" : "secondary"}>
-            {loading ? "处理中" : "空闲"}
+            {loading ? "Working" : "Idle"}
           </Badge>
         </CardAction>
       </CardHeader>
@@ -485,7 +486,7 @@ function ActivityPanel({
         <section className="flex flex-col gap-3">
           <div className="flex items-center gap-2 text-sm font-medium">
             <ListChecksIcon className="size-4 text-muted-foreground" />
-            计划
+            Plan
             {todos.length > 0 && <Badge variant="outline">{todos.length}</Badge>}
           </div>
           {todos.length > 0 ? (
@@ -519,7 +520,7 @@ function ActivityPanel({
               })}
             </ul>
           ) : (
-            <p className="text-sm text-muted-foreground">Agent 创建计划后会显示在这里。</p>
+            <p className="text-sm text-muted-foreground">The agent's plan will appear here.</p>
           )}
         </section>
 
@@ -553,7 +554,7 @@ function ActivityPanel({
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted-foreground">还没有派生 subagent。</p>
+            <p className="text-sm text-muted-foreground">No subagents have been started.</p>
           )}
         </section>
       </CardContent>

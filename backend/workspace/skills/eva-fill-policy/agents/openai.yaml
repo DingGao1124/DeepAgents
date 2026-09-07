@@ -1,4 +1,0 @@
-interface:
-  display_name: "Eva Fill Policy"
-  short_description: "分析活动页 HTML，输出节点级视觉填充策略清单（生图/填色/CSS）"
-  default_prompt: "Use $eva-fill-policy to analyze my activity page HTML and output a structured fill policy, specifying which nodes should use AI image generation, color fill, or CSS styling."

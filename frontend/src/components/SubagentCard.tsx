@@ -23,17 +23,16 @@ import { useAutoScroll } from "@/lib/use-auto-scroll";
 import { messageText, toDisplayText } from "@/lib/message-content";
 
 const TOOL_LABELS: Record<string, string> = {
-  read_file: "读取文件",
-  write_file: "写入文件",
-  edit_file: "编辑文件",
-  list_eva_components: "读取 Eva 组件目录",
-  validate_eva_page: "校验活动页",
-  create_preview: "创建页面预览",
-  write_todos: "更新任务计划",
-  task: "委派子智能体",
-  ls: "查看目录",
-  glob: "查找文件",
-  grep: "搜索内容",
+  read_file: "Read file",
+  write_file: "Write file",
+  edit_file: "Edit file",
+  validate_html_page: "Validate HTML page",
+  create_preview: "Create page preview",
+  write_todos: "Update task plan",
+  task: "Delegate to subagent",
+  ls: "List directory",
+  glob: "Find files",
+  grep: "Search content",
 };
 
 function toolArgSummary(args: unknown): string {
@@ -64,7 +63,7 @@ export function SubagentCard({
   const done = subagent.status === "complete";
   const runningCount = toolCalls.filter((tc) => tc.status === "running").length;
   const finishedCount = toolCalls.filter((tc) => tc.status === "finished").length;
-  const statusLabel = failed ? "失败" : done ? "完成" : streaming ? "运行中" : "等待中";
+  const statusLabel = failed ? "Failed" : done ? "Complete" : streaming ? "Running" : "Waiting";
 
   return (
     <Collapsible open={expanded} onOpenChange={setExpanded}>
@@ -113,7 +112,7 @@ export function SubagentCard({
             variant="ghost"
             size="icon-xs"
             className="-mr-1 ml-auto shrink-0 opacity-50 transition-opacity group-hover/sub:opacity-100"
-            aria-label="展开子智能体详情"
+            aria-label="Expand subagent details"
           >
             <ChevronRightIcon className={cn("size-3 transition-transform", expanded && "rotate-90")} />
           </Button>
@@ -122,12 +121,12 @@ export function SubagentCard({
 
       <CollapsibleContent>
         <div className="mt-1 overflow-hidden rounded-lg border border-border/40 bg-muted/15">
-          {/* 工具调用 */}
+          {/* Tool calls */}
           {toolCalls.length > 0 && (
             <div className="px-3 py-2">
               <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
                 <TerminalIcon className="size-3" />
-                工具调用
+                Tool calls
                 <span className="text-muted-foreground/40">{toolCalls.length}</span>
               </div>
               <ul className="flex flex-col gap-0.5">
@@ -172,7 +171,7 @@ export function SubagentCard({
             </div>
           )}
 
-          {/* 输出 */}
+          {/* Output */}
           {displayContent && (
             <div
               ref={containerRef}
@@ -184,7 +183,7 @@ export function SubagentCard({
             >
               <Markdown content={displayContent} className="text-xs text-muted-foreground" />
               {streaming && (
-                <span className="shimmer ml-0.5" aria-label="仍在运行">
+                <span className="shimmer ml-0.5" aria-label="Still running">
                   ▍
                 </span>
               )}

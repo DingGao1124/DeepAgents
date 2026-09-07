@@ -24,7 +24,7 @@ export function ReasoningBlock({
   const [live, setLive] = useState(false);
   const { containerRef, onScroll } = useAutoScroll(live && open);
 
-  // 思考内容在持续更新时展开；一旦内容停止变化（思考解析完毕）立即折叠，不等正文输出完。
+  // Stay expanded while reasoning changes, then collapse as soon as reasoning is complete.
   useEffect(() => {
     if (!streaming) {
       setLive(false);
@@ -49,14 +49,14 @@ export function ReasoningBlock({
             className={cn("transition-transform", open && "rotate-90")}
           />
           <BrainCircuitIcon data-icon="inline-start" />
-          思考过程
+          Reasoning
           {live ? (
             <Badge variant="warning">
               <Spinner data-icon="inline-start" />
               live
             </Badge>
           ) : (
-            <Badge variant="outline">{reasoning.length} 字符</Badge>
+            <Badge variant="outline">{reasoning.length} characters</Badge>
           )}
         </Button>
       </CollapsibleTrigger>

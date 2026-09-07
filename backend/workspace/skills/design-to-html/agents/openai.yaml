@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design to HTML"
+  short_description: "Convert an approved page design into responsive, accessible HTML."
+  default_prompt: "Use $design-to-html to recreate my approved page design as a self-contained responsive HTML file."

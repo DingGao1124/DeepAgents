@@ -6,7 +6,7 @@ import "./styles.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RenderErrorBoundary title="页面渲染出现异常">
+    <RenderErrorBoundary title="Page rendering error">
       <App />
     </RenderErrorBoundary>
   </StrictMode>,

@@ -53,7 +53,7 @@ function MediaAttachment({ block }: { block: MediaBlock }) {
         : block.mediaType === "audio"
           ? FileMusicIcon
           : FileIcon;
-  const title = block.title ?? `${block.mediaType} 附件`;
+  const title = block.title ?? `${block.mediaType} attachment`;
 
   return (
     <Attachment className="max-w-md">
@@ -67,12 +67,12 @@ function MediaAttachment({ block }: { block: MediaBlock }) {
       <AttachmentContent>
         <AttachmentTitle>{title}</AttachmentTitle>
         <AttachmentDescription>
-          {block.mimeType ?? block.fileId ?? block.url ?? "媒体内容"}
+          {block.mimeType ?? block.fileId ?? block.url ?? "Media content"}
         </AttachmentDescription>
       </AttachmentContent>
       {block.url && (
         <AttachmentTrigger asChild>
-          <a href={block.url} target="_blank" rel="noreferrer noopener" aria-label={`打开 ${title}`} />
+          <a href={block.url} target="_blank" rel="noreferrer noopener" aria-label={`Open ${title}`} />
         </AttachmentTrigger>
       )}
     </Attachment>
@@ -82,7 +82,7 @@ function MediaAttachment({ block }: { block: MediaBlock }) {
 function ToolResultCard({ block }: { block: ResultBlock }) {
   const [open, setOpen] = useState(false);
   const failed = block.status === "error";
-  const summary = toDisplayText(block.output).trim().split("\n")[0] || "工具已返回结果";
+  const summary = toDisplayText(block.output).trim().split("\n")[0] || "Tool returned a result";
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
@@ -90,11 +90,11 @@ function ToolResultCard({ block }: { block: ResultBlock }) {
         <CardHeader className="py-3">
           <CardTitle className="flex items-center gap-2 text-sm">
             {failed ? <AlertCircleIcon className="size-4 text-destructive" /> : <CheckCircle2Icon className="size-4 text-success" />}
-            {block.name ? `${block.name} 返回结果` : "工具返回结果"}
-            <Badge variant={failed ? "destructive" : "outline"}>{failed ? "失败" : "完成"}</Badge>
+            {block.name ? `${block.name} result` : "Tool result"}
+            <Badge variant={failed ? "destructive" : "outline"}>{failed ? "Failed" : "Complete"}</Badge>
           </CardTitle>
           <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="icon-xs" className="ml-auto" aria-label="展开工具结果">
+            <Button variant="ghost" size="icon-xs" className="ml-auto" aria-label="Expand tool result">
               <ChevronRightIcon className={cn("transition-transform", open && "rotate-90")} />
             </Button>
           </CollapsibleTrigger>
@@ -121,10 +121,10 @@ function UnknownContentCard({ block }: { block: UnknownBlock }) {
         <CardHeader className="py-3">
           <CardTitle className="flex items-center gap-2 text-sm text-muted-foreground">
             <WrenchIcon className="size-4" />
-            未识别的内容块：{block.blockType}
+            Unrecognized content block: {block.blockType}
           </CardTitle>
           <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="icon-xs" className="ml-auto" aria-label="展开原始内容">
+            <Button variant="ghost" size="icon-xs" className="ml-auto" aria-label="Expand raw content">
               <ChevronRightIcon className={cn("transition-transform", open && "rotate-90")} />
             </Button>
           </CollapsibleTrigger>
@@ -193,7 +193,7 @@ export function MessageContentRenderer({
       {attachedSubagents.size > 0 && (
         <div className="flex flex-col gap-2 border-l-2 pl-3">
           {[...attachedSubagents.values()].map((subagent) => (
-            <RenderErrorBoundary key={subagent.id} title={`${subagent.name} 的输出暂时无法显示`}>
+            <RenderErrorBoundary key={subagent.id} title={`${subagent.name} output is temporarily unavailable`}>
               <SubagentCard stream={stream} subagent={subagent} />
             </RenderErrorBoundary>
           ))}

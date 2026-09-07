@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML Quality"
+  short_description: "Validate and review generated HTML before preview publication."
+  default_prompt: "Use $html-quality to review this page for structure, accessibility, responsiveness, security, and visual fidelity."

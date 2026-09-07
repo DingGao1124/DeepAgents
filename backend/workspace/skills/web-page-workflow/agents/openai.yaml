@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Page Workflow"
+  short_description: "Create a validated web page from visual references and requirements."
+  default_prompt: "Use $web-page-workflow to turn my key visual and wireframe into a responsive HTML page and preview."

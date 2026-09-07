@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="80" viewBox="0 0 400 80" role="img" aria-labelledby="title desc">
-  <title id="title">文本转图片组件</title>
-  <desc id="desc">Eva Text 文本转图片组件线框预览</desc>
-  <rect x="1" y="1" width="398" height="78" fill="#e0e0e0" stroke="#bbbbbb" stroke-width="1.5"/>
-  <rect x="24" y="28" width="180" height="24" rx="3" fill="#bbbbbb"/>
-  <text x="200" y="70" text-anchor="middle" font-size="11" fill="#888888" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">Eva Text · 图片化</text>
-</svg>

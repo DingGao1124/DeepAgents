@@ -1,5 +1,5 @@
 {
-  "name": "deepagent-monorepo",
+  "name": "web-page-automation-agent",
   "version": "1.0.0",
   "private": true,
   "engines": {
@@ -7,9 +7,9 @@
   },
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
-    "dev:backend": "pnpm --filter deepagent-backend dev",
-    "dev:frontend": "pnpm --filter deepagent-frontend dev",
-    "build": "pnpm --filter deepagent-frontend build",
+    "dev:backend": "pnpm --filter web-page-agent-backend dev",
+    "dev:frontend": "pnpm --filter web-page-agent-frontend dev",
+    "build": "pnpm --filter web-page-agent-frontend build",
     "typecheck": "pnpm --recursive typecheck",
     "setup": "pnpm install && (cd backend && cp -n .env.example .env 2>/dev/null || true)"
   },
