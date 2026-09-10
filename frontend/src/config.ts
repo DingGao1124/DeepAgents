@@ -1,7 +1,9 @@
 import { Client } from "@langchain/langgraph-sdk";
 
-// The LangGraph dev server (backend) runs here by default.
-export const AGENT_URL = "http://localhost:2024";
+// The LangGraph dev server (backend).
+// "localhost" or "127.0.0.1" (both are whitelisted in backend/langgraph.json CORS).
+const AGENT_HOST = typeof window === "undefined" ? "localhost" : window.location.hostname;
+export const AGENT_URL = `http://${AGENT_HOST}:2024`;
 
 // Must match the graph name in ../../backend/langgraph.json ("graphs": { "agent": ... }).
 export const ASSISTANT_ID = "agent";
